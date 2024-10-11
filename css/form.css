@@ -1,18 +1,158 @@
 .error-message {
     color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-size: 12px;
+    margin-bottom: 5px;
 }
-.perview-label{
+.privacy{
+    color: black !important;
+}
+.perview-label {
     font-size: 14px;
     font-weight: bold;
     color: #333;
     margin-bottom: 5px;
 }
 
-.perview-value{
+.perview-value {
     font-size: 14px;
     font-weight: normal;
     color: #333;
     margin-bottom: 10px;
+}
+
+.page-form-title {
+    font-size: 20px;
+    line-height: 24px;
+    margin-top: 0px;
+    color: #61B347 !important;
+    margin-bottom: 15px;
+    font-weight: 600;
+    letter-spacing: -0.022em;
+}
+
+.page-form-question {
+    font-size: 16px;
+    line-height: 22px;
+    margin-block: 0px;
+    color: #1a2952 !important;
+    font-weight: normal !important;
+}
+
+.page-form-input {
+    border: 1px solid #36bb91;
+    background: white;
+    color: #6C6C6E;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.page-form-input:focus,
+textarea:focus {
+    box-shadow: 0 0 0 .2rem rgba(54, 187, 145, 0.25) !important;
+    border: 1px solid #36bb91 !important;
+}
+
+.next-btn,
+.prev-btn {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 50px !important;
+    transition: background-color 0.3s ease;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+}
+
+.next-btn {
+    float: right !important;
+}
+
+.next-btn:hover,
+.prev-btn:hover {
+    background-color: #218838 !important;
+}
+
+.next-btn:focus,
+.prev-btn:focus {
+    box-shadow: none !important;
+}
+
+.perview-label,
+.perview-value {
+    color: black !important;
+    font-size: 14px !important;
+}
+
+.perview-label {
+    font-weight: 800 !important;
+}
+
+.dropdowns-custom {
+    border: 1px solid #36bb91 !important;
+    background: white !important;
+    color: #6C6C6E !important;
+}
+
+.dropdowns-custom:focus {
+    border: 1px solid #36bb91 !important;
+    background: white !important;
+    color: #6C6C6E !important;
+}
+
+.submit-instructions {
+    font-size: 12px !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+}
+
+/* .marketplace_input:checked{
+    background-color: #28a745 !important;
+    color: white !important;
+    border: 1px solid #28a745 !important;
+    
+} */
+.submit-btn {
+    padding: 10px 50px !important;
+    float: right !important;
+    min-width: auto !important;
+    border-radius: 5px !important;
+    background-color: black !important;
+    color: white !important;
+    border: none !important;
+    transition: background-color 0.3s ease;
+    cursor: pointer !important;
+}
+
+.submit-btn:hover {
+    background-color: #333 !important;
+}
+
+.submit-btn:focus {
+    box-shadow: none !important;
+}
+
+.marketplace_input_label,
+.region_label {
+    color: #1a1a1a !important;
+    margin-top: 3px;
+}
+
+.progress-pbmfc {
+    height: 2px !important;
+    width: 100% !important;
+    background-color: #f3f3f3 !important;
+    border-radius: 5px !important;
+    margin: 20px 0 !important;
+}
+
+.progress-bar-pbmfc {
+    transition: width 0.4s ease !important;
+    height: 2px !important;
+    background-color: #218838 !important;
+    border-radius: 5px !important;
 }

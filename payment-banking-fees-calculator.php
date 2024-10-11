@@ -3,256 +3,259 @@
 /**
  * Plugin Name: Marketplace Revenue Calculator
  * Description: A custom plugin to calculate marketplace fees for payment and banking services.
- * Version: 2.0
+ * Version: 2.5
  * Author: Explore Logics IT Solutions
  * Author URI: https://www.explorelogics.com
  */
-// Plugin created by Muhammad Arslan | arslanstack@gmail.com
 if (! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
-
+// Marketplace Revenue Calculator v2.5.zip
 // Register shortcode to display the form
 function pbmfc_display_form()
 {
     ob_start();
 ?>
-    <form id="pbmfc-form" class="pbmfc-form">
-        <!-- Step 1: Select Your Service Type -->
-        <div id="step-1" class="step">
-            <!-- bootstrap success alert -->
-            <div class="alert alert-success" role="alert" id="success-alert" style="display:none;">
-                <h4 class="alert-heading">Thank You!</h4>
-                <p>Your submission has been received. You'll receive your personalized Payment and Banking Marketplace Fees Report shortly!</p>
-            </div>
-            <h3> Select Your Service Type</h3>
-            <div class="form-group">
-                <label class="marketplace_label">Which services do you offer in your marketplace?</label><br>
-                <input type="checkbox" name="service_type[]" value="payment_services" class="marketplace_input" id="payment_services"> <label for="payment_services" class="marketplace_input_label">Payment Services</label><br>
-                <input type="checkbox" name="service_type[]" value="banking_services" class="marketplace_input" id="banking_services"> <label for="banking_services" class="marketplace_input_label">Banking Services</label><br>
-                <div id="service_type_error"></div>
-            </div>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
+    <div class="calculator-pbmfc">
+        <div class="progress-pbmfc">
+            <div class="progress-bar-pbmfc" id="pbmfc-progress-bar" role="progressbar" style="width:0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-
-        <!-- Step 2: Portfolio Details -->
-        <div id="step-2" class="step" style="display:none;">
-            <h3> Portfolio Details</h3>
-            <div class="form-group">
-                <label>How many merchants do you currently have in your portfolio?</label>
-                <input type="text" class="form-control" name="merchant_count" placeholder="e.g., 500" required>
-                <div id="merchant_count_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 3: Payment Services Volume (conditional) -->
-        <div id="step-3-payment" class="step" style="display:none;">
-            <h3> Payment Services Volume</h3>
-            <div class="form-group">
-                <label>What is the expected number of payment transactions per month?</label>
-                <input type="text" class="form-control" name="payment_transactions_count" placeholder="e.g., 10,000">
-                <div id="payment_transactions_count_error"></div>
-            </div>
-            <div class="form-group">
-                <label>What is the expected total volume for Payment Services?</label>
-                <input type="text" class="form-control" name="payment_services_volume" placeholder="e.g., $1,000,000" title="Please enter a valid currency amount.">
-                <div id="payment_services_volume_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 4: Banking Services Volume (conditional) -->
-        <div id="step-4-banking" class="step" style="display:none;">
-            <h3> Banking Services Volume</h3>
-            <div class="form-group">
-                <label>What is the expected total volume for Wire Services?</label>
-                <input type="text" class="form-control" name="banking_wire_volume" placeholder="e.g., $500,000">
-                <div id="banking_wire_volume_error"></div>
-            </div>
-            <div class="form-group">
-                <label>What is the expected total volume for Local Payment Methods (ACH, SEPA)?</label>
-                <input type="text" class="form-control" name="banking_local_volume" placeholder="e.g., $300,000">
-                <div id="banking_local_volume_error"></div>
-            </div>
-            <div class="form-group">
-                <label>What is the expected total volume for Foreign Exchange (FX) Services?</label>
-                <input type="text" class="form-control" name="banking_fx_volume" placeholder="e.g., $200,000">
-                <div id="banking_fx_volume_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 5: Transaction Details (Banking Services) -->
-        <div id="step-5-banking" class="step" style="display:none;">
-            <h3> Transaction Details</h3>
-            <div class="form-group">
-                <label>What is the expected number of wire transactions per month?</label>
-                <input type="text" class="form-control" name="wire_transactions_count" placeholder="e.g., 1,000">
-                <div id="wire_transactions_count_error"></div>
-            </div>
-            <div class="form-group">
-                <label>What is the expected number of local payment method transactions per month?</label>
-                <input type="text" class="form-control" name="local_transactions_count" placeholder="e.g., 5,000">
-                <div id="local_transactions_count_error"></div>
-            </div>
-            <div class="form-group">
-                <label>What is the expected number of FX transactions per month?</label>
-                <input type="text" class="form-control" name="fx_transactions_count" placeholder="e.g., 2,000">
-                <div id="fx_transactions_count_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 6: Geographic Distribution -->
-        <div id="step-6" class="step" style="display:none;">
-            <h3> Geographic Distribution</h3>
-            <div class="form-group">
-                <label>Where are your users based?</label><br>
-                <input type="checkbox" name="regions[]" value="US" id="region_us"> <label for="region_us"> United States (US)</label><br>
-                <input type="checkbox" name="regions[]" value="EU" id="region_eu"> <label for="region_eu">European Union (EU)</label><br>
-                <input type="checkbox" name="regions[]" value="UK" id="region_uk"> <label for="region_uk">United Kingdom (UK)</label><br>
-                <input type="checkbox" name="regions[]" value="APAC" id="region_apac"> <label for="region_apac">Asia-Pacific (APAC)</label><br>
-                <input type="checkbox" name="regions[]" value="MENA" id="region_mena"> <label for="region_mena">Middle East and North Africa (MENA)</label><br>
-                <input type="checkbox" name="regions[]" value="LATAM" id="region_latam"> <label for="region_latam">Latin America (LATAM)</label><br>
-                <div id="region_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 7: User Distribution by Region (conditional) -->
-        <div id="step-7-region" class="step" style="display:none;">
-            <h3> User Distribution by Region</h3>
-            <div class="form-group">
-                <label>United States (US)</label>
-                <input type="number" class="form-control percentage_field" name="us_percentage" placeholder="e.g., 40%">
-                <div id="us_percentage_error"></div>
-            </div>
-            <div class="form-group">
-                <label>European Union (EU)</label>
-                <input type="number" class="form-control percentage_field" name="eu_percentage" placeholder="e.g., 30%">
-                <div id="eu_percentage_error"></div>
-            </div>
-            <div class="form-group">
-                <label>United Kingdom (UK)</label>
-                <input type="number" class="form-control percentage_field" name="uk_percentage" placeholder="e.g., 30%">
-                <div id="uk_percentage_error"></div>
-            </div>
-            <div class="form-group">
-                <label>Asia-Pacific (APAC)</label>
-                <input type="number" class="form-control percentage_field" name="apac_percentage" placeholder="e.g., 0%">
-                <div id="apac_percentage_error"></div>
-            </div>
-            <div class="form-group">
-                <label>Middle East and North Africa (MENA)</label>
-                <input type="number" class="form-control percentage_field" name="mena_percentage" placeholder="e.g., 0%">
-                <div id="mena_percentage_error"></div>
-            </div>
-            <div class="form-group">
-                <label>Latin America (LATAM)</label>
-                <input type="number" class="form-control percentage_field" name="latam_percentage" placeholder="e.g., 0%">
-                <div id="latam_percentage_error"></div>
-            </div>
-            <div id="percentage_fields_error"></div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
-
-        <!-- Step 8: Your Information -->
-        <div id="step-8" class="step" style="display:none;">
-            <h3> Your Information</h3>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <!-- <label for="first_name">First Name: <sup class="text-danger">*</sup></label> -->
-                    <input type="text" class="form-control" name="first_name" placeholder="First Name*" required>
-                    <div id="first_name_error"></div>
+        <form id="pbmfc-form" class="pbmfc-form">
+            <!-- Step 1: Select Your Service Type -->
+            <div id="step-1" class="step">
+                <!-- bootstrap success alert -->
+                <div class="alert alert-success" role="alert" id="success-alert" style="display:none;">
+                    <p>Thank you for completing our Ahrvo Network Marketplace Revenue questionnaire. We'll get back to you shortly.</p>
                 </div>
-                <div class="form-group col-md-6">
-                    <!-- <label for="last_name">Last Name: <sup class="text-danger">*</sup></label> -->
-                    <input type="text" class="form-control" name="last_name" placeholder="Last Name*" required>
-                    <div id="last_name_error"></div>
+                <h4 class="page-form-title"> Select Your Service Type</h4>
+                <div class="form-group">
+                    <label class="marketplace_label page-form-question pb-3">Which services do you offer in your marketplace?</label><br>
+                    <input type="checkbox" name="service_type[]" value="payment_services" class="marketplace_input" id="payment_services"> <label for="payment_services" class="marketplace_input_label">Payment Services</label><br>
+                    <input type="checkbox" name="service_type[]" value="banking_services" class="marketplace_input" id="banking_services"> <label for="banking_services" class="marketplace_input_label">Banking Services</label><br>
+                    <div id="service_type_error"></div>
                 </div>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <!-- <label for="email">Email: <sup class="text-danger">*</sup></label> -->
-                    <input type="email" class="form-control" name="email" placeholder="Email*" required>
-                    <div id="email_error"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <!-- <label for="phone">Phone: <sup class="text-danger">*</sup></label> -->
-                    <input type="tel" class="form-control" name="phone" placeholder="Phone*" required>
-                    <div id="phone_error"></div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <!-- <label for="company_name">Company Name: <sup class="text-danger">*</sup></label> -->
-                    <input type="text" class="form-control" name="company_name" placeholder="Company Name*" required>
-                    <div id="company_name_error"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <!-- <label for="country">Country: <sup class="text-danger">*</sup></label> -->
-                    <input type="text" class="form-control" name="country" placeholder="Country*" required>
-                    <div id="country_error"></div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <!-- <label for="role">Role: <sup class="text-danger">*</sup></label> -->
-                    <select class="form-control" name="role" required>
-                        <option value="">Role*</option>
-                        <option value="CEO">CEO</option>
-                        <option value="CTO">CTO</option>
-                        <option value="CCO">CCO</option>
-                        <option value="COO">COO</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <div id="role_error"></div>
-                </div>
-                <div class="form-group col-md-6">
-                    <!-- <label for="number_of_employees">Number of Employees</label> -->
-                    <select class="form-control" required name="number_of_employees">
-                        <option value="">Number of Employees</option>
-                        <option value="<10">
-                            < 10</option>
-                        <option value="11-50">11-50</option>
-                        <option value="51-100">51-100</option>
-                        <option value="100+">100+</option>
-                    </select>
-                    <div id="number_of_employees_error"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <!-- <label for="message">Your Message:</label> -->
-                <textarea class="form-control" name="message" required placeholder="Please tell us more about your needs."></textarea>
-                <div id="message_error"></div>
-            </div>
-            <div class="form-group">
-                <input type="checkbox" name="privacy_policy" id="privacy" value="1" required> <label for="privacy"> I confirm that I have read the <a href="https://ahrvo.com/data-privacy-policy/" target="_blank" class="terms-link">Privacy Policy</a> and <a href="https://ahrvo.com/terms-of-service/" target="_blank" class="terms-link">Terms & Conditions</a>.</label>
-                <div id="privacy_policy_error"></div>
-            </div>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="button" class="btn btn-primary next-btn">Next</button>
-        </div>
 
-        <!-- Step 9: Review & Submit -->
-        <div id="step-9" class="step" style="display:none;">
-            <h3>Review & Submit</h3>
-            <div id="review-section">
-                <!-- Review section will be dynamically populated -->
+            <!-- Step 2: Portfolio Details -->
+            <div id="step-2" class="step" style="display:none;">
+                <h4 class="page-form-title"> Portfolio Details</h4>
+                <div class="form-group">
+                    <label class="page-form-question">How many merchants do you currently have in your portfolio?</label>
+                    <input type="text" class="form-control page-form-input" name="merchant_count" placeholder="e.g., 500" required>
+                    <div id="merchant_count_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
             </div>
-            <p class="submit-instructions">Submit your responses to generate your personalized Payment and
-                Banking Marketplace Fees Report.</p>
-            <button type="button" class="btn btn-secondary prev-btn">Previous</button>
-            <button type="submit" class="btn btn-success submit-btn">Generate Report</button>
-        </div>
-    </form>
+
+            <!-- Step 3: Payment Services Volume (conditional) -->
+            <div id="step-3-payment" class="step" style="display:none;">
+                <h4 class="page-form-title"> Payment Services Volume</h4>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected total volume for Payment Services?</label>
+                    <input type="text" class="form-control page-form-input" name="payment_services_volume" placeholder="e.g., $1,000,000" title="Please enter a valid currency amount.">
+                    <div id="payment_services_volume_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected number of payment transactions per month?</label>
+                    <input type="text" class="form-control page-form-input" name="payment_transactions_count" placeholder="e.g., 10,000">
+                    <div id="payment_transactions_count_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 4: Banking Services Volume (conditional) -->
+            <div id="step-4-banking" class="step" style="display:none;">
+                <h4 class="page-form-title"> Banking Services Volume</h4>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected total volume for Wire Services?</label>
+                    <input type="text" class="form-control page-form-input" name="banking_wire_volume" placeholder="e.g., $500,000">
+                    <div id="banking_wire_volume_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected total volume for Local Payment Methods (ACH, SEPA)?</label>
+                    <input type="text" class="form-control page-form-input" name="banking_local_volume" placeholder="e.g., $300,000">
+                    <div id="banking_local_volume_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected total volume for Foreign Exchange (FX) Services?</label>
+                    <input type="text" class="form-control page-form-input" name="banking_fx_volume" placeholder="e.g., $200,000">
+                    <div id="banking_fx_volume_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 5: Transaction Details (Banking Services) -->
+            <div id="step-5-banking" class="step" style="display:none;">
+                <h4 class="page-form-title"> Transaction Details</h4>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected number of wire transactions per month?</label>
+                    <input type="text" class="form-control page-form-input" name="wire_transactions_count" placeholder="e.g., 1,000">
+                    <div id="wire_transactions_count_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected number of local payment method transactions per month?</label>
+                    <input type="text" class="form-control page-form-input" name="local_transactions_count" placeholder="e.g., 5,000">
+                    <div id="local_transactions_count_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">What is the expected number of FX transactions per month?</label>
+                    <input type="text" class="form-control page-form-input" name="fx_transactions_count" placeholder="e.g., 2,000">
+                    <div id="fx_transactions_count_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 6: Geographic Distribution -->
+            <div id="step-6" class="step" style="display:none;">
+                <h4 class="page-form-title"> Geographic Distribution</h4>
+                <div class="form-group">
+                    <label class="page-form-question pb-2">Where are your users based?</label><br>
+                    <input type="checkbox" name="regions[]" value="US" id="region_us"> <label for="region_us" class="region_label"> United States (US)</label><br>
+                    <input type="checkbox" name="regions[]" value="EU" id="region_eu"> <label for="region_eu" class="region_label">European Union (EU)</label><br>
+                    <input type="checkbox" name="regions[]" value="UK" id="region_uk"> <label for="region_uk" class="region_label">United Kingdom (UK)</label><br>
+                    <input type="checkbox" name="regions[]" value="APAC" id="region_apac"> <label for="region_apac" class="region_label">Asia-Pacific (APAC)</label><br>
+                    <input type="checkbox" name="regions[]" value="MENA" id="region_mena"> <label for="region_mena" class="region_label">Middle East and North Africa (MENA)</label><br>
+                    <input type="checkbox" name="regions[]" value="LATAM" id="region_latam"> <label for="region_latam" class="region_label">Latin America (LATAM)</label><br>
+                    <div id="region_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 7: User Distribution by Region (conditional) -->
+            <div id="step-7-region" class="step" style="display:none;">
+                <h4 class="page-form-title"> User Distribution by Region</h4>
+                <div class="form-group">
+                    <label class="page-form-question">United States (US)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="us_percentage" placeholder="e.g., 40%">
+                    <div id="us_percentage_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">European Union (EU)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="eu_percentage" placeholder="e.g., 30%">
+                    <div id="eu_percentage_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">United Kingdom (UK)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="uk_percentage" placeholder="e.g., 30%">
+                    <div id="uk_percentage_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">Asia-Pacific (APAC)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="apac_percentage" placeholder="e.g., 0%">
+                    <div id="apac_percentage_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">Middle East and North Africa (MENA)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="mena_percentage" placeholder="e.g., 0%">
+                    <div id="mena_percentage_error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="page-form-question">Latin America (LATAM)</label>
+                    <input type="number" class="form-control percentage_field  page-form-input" name="latam_percentage" placeholder="e.g., 0%">
+                    <div id="latam_percentage_error"></div>
+                </div>
+                <div id="percentage_fields_error"></div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 8: Your Information -->
+            <div id="step-8" class="step" style="display:none;">
+                <h4 class="page-form-title"> Your Information</h4>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <!-- <label for="first_name">First Name: <sup class="text-danger">*</sup></label> -->
+                        <input type="text" class="form-control page-form-input" name="first_name" placeholder="First Name*" required>
+                        <div id="first_name_error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <!-- <label for="last_name">Last Name: <sup class="text-danger">*</sup></label> -->
+                        <input type="text" class="form-control page-form-input" name="last_name" placeholder="Last Name*" required>
+                        <div id="last_name_error"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <!-- <label for="email">Email: <sup class="text-danger">*</sup></label> -->
+                        <input type="email" class="form-control page-form-input" name="email" placeholder="Email*" required>
+                        <div id="email_error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <!-- <label for="phone">Phone: <sup class="text-danger">*</sup></label> -->
+                        <input type="tel" class="form-control page-form-input" name="phone" placeholder="Phone*" required>
+                        <div id="phone_error"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <!-- <label for="company_name">Company Name: <sup class="text-danger">*</sup></label> -->
+                        <input type="text" class="form-control page-form-input" name="company_name" placeholder="Company Name*" required>
+                        <div id="company_name_error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <!-- <label for="country">Country: <sup class="text-danger">*</sup></label> -->
+                        <input type="text" class="form-control page-form-input" name="country" placeholder="Country*" required>
+                        <div id="country_error"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <!-- <label for="role">Role: <sup class="text-danger">*</sup></label> -->
+                        <select class="form-control page-form-input dropdowns-custom" name="role" required>
+                            <option value="">Role*</option>
+                            <option value="CEO">CEO</option>
+                            <option value="CTO">CTO</option>
+                            <option value="CCO">CCO</option>
+                            <option value="COO">COO</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div id="role_error"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <!-- <label for="number_of_employees">Number of Employees</label> -->
+                        <select class="form-control page-form-input dropdowns-custom" required name="number_of_employees">
+                            <option value="">Number of Employees</option>
+                            <option value="<10">
+                                < 10</option>
+                            <option value="11-50">11-50</option>
+                            <option value="51-100">51-100</option>
+                            <option value="100+">100+</option>
+                        </select>
+                        <div id="number_of_employees_error"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- <label for="message">Your Message:</label> -->
+                    <textarea class="form-control" name="message" required placeholder="Please tell us more about your needs."></textarea>
+                    <div id="message_error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="privacy" class="privacy"><input type="checkbox" name="privacy_policy" id="privacy" value="1" required> I confirm that I have read the <a href="https://ahrvo.com/data-privacy-policy/" target="_blank" class="terms-link">Privacy Policy</a> and <a href="https://ahrvo.com/terms-of-service/" target="_blank" class="terms-link">Terms & Conditions</a>.</label>
+                    <div id="privacy_policy_error"></div>
+                </div>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+
+            <!-- Step 9: Review & Submit -->
+            <div id="step-9" class="step" style="display:none;">
+                <h4 class="page-form-title">Review & Submit</h4>
+                <div id="review-section">
+                    <!-- Review section will be dynamically populated -->
+                </div>
+                <p class="submit-instructions">Submit your responses to generate your personalized Payment and
+                    Banking Marketplace Fees Report.</p>
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="submit" class="btn btn-success submit-btn">Submit</button>
+            </div>
+        </form>
+    </div>
 <?php
     return ob_get_clean();
 }
@@ -424,7 +427,8 @@ function pbmfc_submit_form()
         }
 
         // Email settings
-        $admin_email = get_option('admin_email');
+        // $admin_email = get_option('admin_email');
+        $admin_email = "yaseen3327095758@gmail.com";
         $subject = 'Ahrvo Network Marketplace Revenue Report is Ready – Let’s Discuss Next Steps';
 
         // Prepare the email message for both user and admin
@@ -433,19 +437,29 @@ function pbmfc_submit_form()
         $message .= '<h3>Your Marketplace Revenue Report Submission</h3>';
 
         // Include formatted service types
-        $message .= '<p><strong>Service Type:</strong> ' . $service_types_text . '</p>';
-        $message .= '<p><strong>Merchant Count:</strong> ' . (!empty($merchant_count) ? $merchant_count : 'N/A') . '</p>';
-        $message .= '<p><strong>Payment Transactions Count:</strong> ' . (!empty($payment_transactions_count) ? $payment_transactions_count : 'N/A') . '</p>';
-        $message .= '<p><strong>Payment Services Volume:</strong> ' . (!empty($payment_services_volume) ? $payment_services_volume : 'N/A') . '</p>';
-        $message .= '<p><strong>Banking Wire Volume:</strong> ' . (!empty($banking_wire_volume) ? $banking_wire_volume : 'N/A') . '</p>';
-        $message .= '<p><strong>Banking Local Payment Methods Volume:</strong> ' . (!empty($banking_local_volume) ? $banking_local_volume : 'N/A') . '</p>';
-        $message .= '<p><strong>Banking FX Volume:</strong> ' . (!empty($banking_fx_volume) ? $banking_fx_volume : 'N/A') . '</p>';
-        $message .= '<p><strong>Wire Transactions Per Month:</strong> ' . (!empty($wire_transactions_count) ? $wire_transactions_count : 'N/A') . '</p>';
-        $message .= '<p><strong>Local Transactions Per Month:</strong> ' . (!empty($local_transactions_count) ? $local_transactions_count : 'N/A') . '</p>';
-        $message .= '<p><strong>FX Transactions Per Month:</strong> ' . (!empty($fx_transactions_count) ? $fx_transactions_count : 'N/A') . '</p>';
+        $message .= '<p><strong>Which services do you offer in your marketplace?</strong></p>';
+        $message .= $service_types_text;
+        $message .= '<p><strong>How many merchants do you currently have in your portfolio?</strong></p>';
+        $message .= (!empty($merchant_count) ? $merchant_count : 'N/A');
+        $message .= '<p><strong>What is the expected number of payment transactions per month?</strong></p>';
+        $message .= (!empty($payment_transactions_count) ? $payment_transactions_count : 'N/A');
+        $message .= '<p><strong>What is the expected total volume for Payment Services?</strong> </p>';
+        $message .= (!empty($payment_services_volume) ? $payment_services_volume : 'N/A');
+        $message .= '<p><strong>What is the expected total volume for Wire Services?</strong></p>';
+        $message .= (!empty($banking_wire_volume) ? $banking_wire_volume : 'N/A');
+        $message .= '<p><strong>What is the expected total volume for Local Payment Methods (ACH, SEPA)?</strong></p>';
+        $message .= (!empty($banking_local_volume) ? $banking_local_volume : 'N/A');
+        $message .= '<p><strong>What is the expected total volume for Foreign Exchange (FX) Services?</strong></p>';
+        $message .= (!empty($banking_fx_volume) ? $banking_fx_volume : 'N/A');
+        $message .= '<p><strong>What is the expected number of wire transactions per month?</strong></p>';
+        $message .= (!empty($wire_transactions_count) ? $wire_transactions_count : 'N/A');
+        $message .= '<p><strong>What is the expected number of local payment method transactions per month?</strong></p>';
+        $message .= (!empty($local_transactions_count) ? $local_transactions_count : 'N/A');
+        $message .= '<p><strong>What is the expected number of FX transactions per month?</strong></p>';
+        $message .= (!empty($fx_transactions_count) ? $fx_transactions_count : 'N/A') ;
 
         // User Base Region Distribution
-        $region_output = '<h3>Userbase Region Distribution</h3>';
+        $region_output = '<h3>Where are your users based?</h3>';
 
         if (!empty($us_percentage)) {
             $region_output .= '<p><strong>United States (US):</strong> ' . $us_percentage . '%</p>';
@@ -490,7 +504,7 @@ function pbmfc_submit_form()
         wp_send_json_error(array('message' => 'Form submission failed. No data received.'));
     }
 }
-
+// Plugin created by Muhammad Arslan | arslanstack@gmail.com
 
 // Register AJAX actions for logged-in and non-logged-in users
 add_action('wp_ajax_pbmfc_submit_form', 'pbmfc_submit_form');

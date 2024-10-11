@@ -1,6 +1,14 @@
 jQuery(document).ready(function ($) {
+    function updateProgressBar(step) {
+        const totalSteps = 9; // Total number of steps in your form
+        const percentage = (step / totalSteps) * 100;
+        $('#pbmfc-progress-bar').css('width', percentage + '%');
+        $('#pbmfc-progress-bar').attr('aria-valuenow', percentage); // For accessibility
+    }
     let currentStep = 1;
+    updateProgressBar(currentStep);
     const totalSteps = 9; // Update total steps to 9
+
     $(document).on('input', '.percentage_field', function () {
         // Replace any non-numeric characters immediately upon input
         this.value = this.value.replace(/[^0-9]/g, '');
@@ -10,10 +18,17 @@ jQuery(document).ready(function ($) {
             this.value = '100';
         }
     });
+    function goTop() {
+        $('html, body').animate({
+            scrollTop: $(".calculator-pbmfc").offset().top - 300
+        }, 500);
+    }
     // Function to show only the current step
     function showStep(step) {
         $('.step').hide();
         $('#step-' + step).show();
+        updateProgressBar(currentStep);
+
     }
 
     // Initialize form by showing the first step
@@ -107,10 +122,13 @@ jQuery(document).ready(function ($) {
                 // Move to Step 8 directly
                 currentStep = 8;
                 showStep(currentStep); // Show Step 8
+                goTop();
+
             } else {
                 // Multiple regions selected: Move to Step 7
                 currentStep++;
                 showStep(currentStep);
+                goTop();
                 showOnlySelectedRegionsInStep7();
             }
         } else if (currentStep === 7) { // Validation for Step 7
@@ -125,11 +143,13 @@ jQuery(document).ready(function ($) {
                 // Move to Step 8
                 currentStep++;
                 showStep(currentStep);
+                goTop();
             }
         } else if (currentStep === 8) {
             // Move to the Review & Submit step (Step 9)
             currentStep++;
             showStep(currentStep);
+            goTop();
         } else {
             currentStep++;
         }
@@ -154,15 +174,18 @@ jQuery(document).ready(function ($) {
             // Move to Step 8
             currentStep--;
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 8) {
             // Go to Step 6 if only one region is selected
             let selectedRegions = $('input[name="regions[]"]:checked').length;
             currentStep = selectedRegions > 1 ? 7 : 6;
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 7) {
             // Move to Step 6
             currentStep--;
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 6) {
             // Determine previous step based on service type selected in Step 1
             if ($('#payment_services').is(':checked') && $('#banking_services').is(':checked')) {
@@ -176,6 +199,7 @@ jQuery(document).ready(function ($) {
                 currentStep = 2;
             }
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 5) {
             // Handle Step 5 navigation based on service type
             if ($('#banking_services').is(':checked')) {
@@ -187,6 +211,7 @@ jQuery(document).ready(function ($) {
                 currentStep = 2;
             }
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 4) {
             // Handle Step 4 navigation
             if ($('#banking_services').is(':checked') && $('#payment_services').is(':checked')) {
@@ -198,6 +223,7 @@ jQuery(document).ready(function ($) {
                 currentStep = 3;
             }
             showStep(currentStep);
+            goTop();
         } else if (currentStep === 3 && $('#payment_services').is(':checked')) {
             currentStep = 2;
             showStep(currentStep);
@@ -205,6 +231,7 @@ jQuery(document).ready(function ($) {
             // Default behavior: Go back to the previous step
             currentStep--;
             showStep(currentStep);
+            goTop();
         }
     }
     // Function to populate the Review section
@@ -224,15 +251,16 @@ jQuery(document).ready(function ($) {
         }
         reviewSection.append(`
         <div class="form-group">
-            <label for="service_type[]" class="perview-label">Service Type:</label>
-            <span class="perview-value">${serviceTypes.replace(/_/g, ' ')}</span> </div>
-    `);
+            <label for="service_type[]" class="perview-label">Which services do you offer in your marketplace?</label><br>
+            <span class="perview-value">
+            ${serviceTypes.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </span>`);
 
         // Handle Merchant Count
         let merchantCount = formData.find(data => data.name === 'merchant_count').value;
         reviewSection.append(`
         <div class="form-group">
-            <label for="merchant_count" class="perview-label">Merchant Count:</label>
+            <label for="merchant_count" class="perview-label">How many merchants do you currently have in your portfolio?</label><br>
             <span class="perview-value">${merchantCount}</span>
         </div>
     `);
@@ -243,7 +271,7 @@ jQuery(document).ready(function ($) {
         let paymentServicesVolume = formData.find(data => data.name === 'payment_services_volume').value || 'N/A';
         reviewSection.append(`
     <div class="form-group">
-        <label for="payment_services_volume" class="perview-label">Payment Services Volume:</label>
+        <label for="payment_services_volume" class="perview-label">What is the expected total volume for Payment Services?</label><br>
         <span class="perview-value">${formatVolume(paymentServicesVolume)}</span>
     </div>
 `);
@@ -252,7 +280,7 @@ jQuery(document).ready(function ($) {
         let paymentTransactionsCount = formData.find(data => data.name === 'payment_transactions_count').value || 'N/A';
         reviewSection.append(`
     <div class="form-group">
-        <label for="payment_transactions_count" class="perview-label">Payment Transactions Count:</label>
+        <label for="payment_transactions_count" class="perview-label">What is the expected number of payment transactions per month?</label><br>
         <span class="perview-value">${paymentTransactionsCount}</span>
     </div>
 `);
@@ -261,7 +289,7 @@ jQuery(document).ready(function ($) {
         let bankingWireVolume = formData.find(data => data.name === 'banking_wire_volume').value || 'N/A';
         reviewSection.append(`
     <div class="form-group">
-        <label for="banking_wire_volume" class="perview-label">Banking Wire Volume:</label>
+        <label for="banking_wire_volume" class="perview-label">What is the expected total volume for Wire Services?</label><br>
         <span class="perview-value">${formatVolume(bankingWireVolume)}</span>
     </div>
 `);
@@ -269,7 +297,7 @@ jQuery(document).ready(function ($) {
         let bankingLocalVolume = formData.find(data => data.name === 'banking_local_volume').value || 'N/A';
         reviewSection.append(`
     <div class="form-group">
-        <label for="banking_local_volume" class="perview-label">Banking Local Volume:</label>
+        <label for="banking_local_volume" class="perview-label">What is the expected total volume for Local Payment Methods (ACH, SEPA)?</label><br>
         <span class="perview-value">${formatVolume(bankingLocalVolume)}</span>
     </div>
 `);
@@ -277,7 +305,7 @@ jQuery(document).ready(function ($) {
         let bankingFxVolume = formData.find(data => data.name === 'banking_fx_volume').value || 'N/A';
         reviewSection.append(`
     <div class="form-group">
-        <label for="banking_fx_volume" class="perview-label">Banking FX Volume:</label>
+        <label for="banking_fx_volume" class="perview-label">What is the expected total volume for Foreign Exchange (FX) Services?</label><br>
         <span class="perview-value">${formatVolume(bankingFxVolume)}</span>
     </div>
 `);
@@ -286,21 +314,21 @@ jQuery(document).ready(function ($) {
         let wireTransactionsCount = formData.find(data => data.name === 'wire_transactions_count').value || 'N/A';
         reviewSection.append(`
         <div class="form-group">
-            <label class="perview-label" for="wire_transactions_count">Wire Transactions Count:</label>
+            <label class="perview-label" for="wire_transactions_count">What is the expected number of wire transactions per month?</label><br>
             <span class="perview-value">${wireTransactionsCount}</span>
         </div>
     `);
         let localTransactionsCount = formData.find(data => data.name === 'local_transactions_count').value || 'N/A';
         reviewSection.append(`
         <div class="form-group">
-            <label class="perview-label" for="local_transactions_count">Local Transactions Count:</label>
+            <label class="perview-label" for="local_transactions_count">What is the expected number of local payment method transactions per month?</label><br>
             <span class="perview-value">${localTransactionsCount}</span>
         </div>
     `);
         let fxTransactionsCount = formData.find(data => data.name === 'fx_transactions_count').value || 'N/A';
         reviewSection.append(`
         <div class="form-group">
-            <label class="perview-label" for="fx_transactions_count">FX Transactions Count:</label>
+            <label class="perview-label" for="fx_transactions_count">What is the expected number of FX transactions per month?</label><br>
             <span class="perview-value">${fxTransactionsCount}</span>
         </div>
     `);
@@ -315,7 +343,7 @@ jQuery(document).ready(function ($) {
 
         reviewSection.append(`
     <div class="form-group">
-        <label class="perview-label" for="regions[]">Regions:</label>
+        <label class="perview-label" for="regions[]">Where are your users based?</label><br>
         <span class="perview-value">${regions}</span>
     </div>
 `);
@@ -327,7 +355,7 @@ jQuery(document).ready(function ($) {
             if (percentage !== undefined) {
                 reviewSection.append(`
             <div class="form-group">
-                <label class="perview-label" for="${region.toLowerCase()}_percentage">${region.toUpperCase()} Percentage:</label>
+                <label class="perview-label" for="${region.toLowerCase()}_percentage">${region.toUpperCase()} userbase %:</label>
                 <span class="perview-value">${percentage}%</span>
             </div>
         `);
@@ -390,6 +418,7 @@ jQuery(document).ready(function ($) {
             moveNext();
             if (currentStep <= totalSteps) {
                 showStep(currentStep);
+                goTop();
                 checkServices();
                 populateReviewSection();
             }
@@ -402,6 +431,7 @@ jQuery(document).ready(function ($) {
         populateReviewSection();
         if (currentStep >= 1) {
             showStep(currentStep);
+            goTop();
             checkServices();
         }
     });
@@ -615,7 +645,7 @@ jQuery(document).ready(function ($) {
     $('#pbmfc-form').on('submit', function (e) {
         e.preventDefault();
         // submit button text change to Generating ...
-        $('.submit-btn').html('Generating ...');
+        $('.submit-btn').html('Submiting');
         //disable submit and previous button
         $('.submit-btn').prop('disabled', true);
         $('.prev-btn').prop('disabled', true);
@@ -633,12 +663,13 @@ jQuery(document).ready(function ($) {
                     console.log(response.data.message); // Log success message
                     // alert('Form submitted successfully!');
                     // enable submit and previous button
-                    $('.submit-btn').html('Generate Report');
+                    $('.submit-btn').html('Submit');
                     $('.submit-btn').prop('disabled', false);
                     $('.prev-btn').prop('disabled', false);
                     // Reset the form and take to first page
                     currentStep = 1;
                     showStep(currentStep);
+                    goTop();
                     // show success-alert
                     $('#success-alert').show();
                     $('#pbmfc-form').trigger('reset');
@@ -647,6 +678,7 @@ jQuery(document).ready(function ($) {
 
                 } else {
                     alert('Form submission failed.');
+                    $('.submit-btn').html('Submit');
                     $('.submit-btn').prop('disabled', false);
                     $('.prev-btn').prop('disabled', false);
                 }
@@ -654,12 +686,13 @@ jQuery(document).ready(function ($) {
             error: function (error) {
                 console.error(error);
                 alert('An error occurred. Please try again.');
+                $('.submit-btn').html('Submit');
                 $('.submit-btn').prop('disabled', false);
                 $('.prev-btn').prop('disabled', false);
             }
         });
     });
-
+    // Plugin created by Muhammad Arslan | arslanstack@gmail.com
     // Trigger checkServices initially for conditional steps
     checkServices();
 
