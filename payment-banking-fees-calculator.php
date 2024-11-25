@@ -23,23 +23,59 @@ function pbmfc_display_form()
         <form id="pbmfc-form" class="pbmfc-form">
             <!-- Step 1: Select Your Service Type -->
             <div id="step-1" class="step">
-                <!-- bootstrap success alert -->
-                <div class="alert alert-success" role="alert" id="success-alert" style="display:none;">
-                    <p>Thank you for completing our Ahrvo Network Marketplace Revenue questionnaire. We'll get back to you shortly.</p>
-                </div>
+
                 <h4 class="page-form-title"> Select Your Service Type</h4>
                 <div class="form-group">
-                    <label class="marketplace_label page-form-question pb-3">Which services do you offer in your marketplace?</label><br>
-                    <input type="checkbox" name="service_type[]" value="payment_services" class="marketplace_input" id="payment_services"> <label for="payment_services" class="marketplace_input_label">Payment Services</label><br>
-                    <input type="checkbox" name="service_type[]" value="banking_services" class="marketplace_input" id="banking_services"> <label for="banking_services" class="marketplace_input_label">Banking Services</label><br>
+                    <label class="marketplace_label page-form-question pb-3">Which services do you want to offer in your marketplace?</label><br>
+                    <input type="checkbox" name="service_type[]" value="payment_services" class="marketplace_input" onchange="if(this.checked){ document.getElementById('payment_services_options').style.display = 'block'; } else { document.getElementById('payment_services_options').style.display = 'none';}" id="payment_services"> <label for="payment_services" class="marketplace_input_label">Payment Services</label><br>
+                    <div class="form-group" id="payment_services_options" style="display: none;">
+                        <label class="page-form-question-services-options">Which Payment Services are you interested in?</label> <br>
+                        <input type="checkbox" name="payment_services_options[]" value="ACH" class="marketplace_input" id="ach"> <label for="ach" class="marketplace_input_label">ACH</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="APMs" class="marketplace_input" id="apm"> <label for="apm" class="marketplace_input_label">APMs</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Card Acquiring" class="marketplace_input" id="card_acquiring"> <label for="card_acquiring" class="marketplace_input_label">Card Acquiring</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Clearing Service" class="marketplace_input" id="clearing_service"> <label for="clearing_service" class="marketplace_input_label">Clearing Service</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Crossborder FX" class="marketplace_input" id="crossborder_fx"> <label for="crossborder_fx" class="marketplace_input_label">Crossborder FX</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Local Payment Methods" class="marketplace_input" id="local_payment_methods"> <label for="local_payment_methods" class="marketplace_input_label">Local Payment Methods</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="On and Off Ramps" class="marketplace_input" id="on_and_off_ramps"> <label for="on_and_off_ramps" class="marketplace_input_label">On and Off Ramps</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Open Banking" class="marketplace_input" id="open_banking"> <label for="open_banking" class="marketplace_input_label">Open Banking</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Payfacs" class="marketplace_input" id="payfacs"> <label for="payfacs" class="marketplace_input_label">Payfacs</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Real-Time Payments" class="marketplace_input" id="real_time_payments"> <label for="real_time_payments" class="marketplace_input_label">Real-Time Payments</label><br>
+                        <input type="checkbox" name="payment_services_options[]" value="Wire Transfers" class="marketplace_input" id="wire_transfers"> <label for="wire_transfers" class="marketplace_input_label">Wire Transfers</label><br>
+                        <div id="payment_services_options_error"></div><br>
+                    </div>
+                    <input type="checkbox" name="service_type[]" value="banking_services" class="marketplace_input" onchange="if(this.checked){ document.getElementById('banking_services_options').style.display = 'block'; } else { document.getElementById('banking_services_options').style.display = 'none';}" id="banking_services"> <label for="banking_services" class="marketplace_input_label">Banking Services</label><br>
+                    <div class="form-group" id="banking_services_options" style="display: none;">
+                        <label class="page-form-question-services-options">Which Banking Services are you interested in?</label> <br>
+                        <input type="checkbox" name="banking_services_options[]" value="Banking as a Service" class="marketplace_input" id="banking_as_a_service"> <label for="banking_as_a_service" class="marketplace_input_label">Banking as a Service</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Client Money Accounts" class="marketplace_input" id="client_money_accounts"> <label for="client_money_accounts" class="marketplace_input_label">Client Money Accounts</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="FBO Accounts" class="marketplace_input" id="fbo_accounts"> <label for="fbo_accounts" class="marketplace_input_label">FBO Accounts</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Multi Currency Accounts" class="marketplace_input" id="multi_currency_accounts"> <label for="multi_currency_accounts" class="marketplace_input_label">Multi Currency Accounts</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Operating Accounts" class="marketplace_input" id="operating_accounts"> <label for="operating_accounts" class="marketplace_input_label">Operating Accounts</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Segregated Accounts" class="marketplace_input" id="segregated_accounts"> <label for="segregated_accounts" class="marketplace_input_label">Segregated Accounts</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Sponsor Banks" class="marketplace_input" id="sponsor_banks"> <label for="sponsor_banks" class="marketplace_input_label">Sponsor Banks</label><br>
+                        <input type="checkbox" name="banking_services_options[]" value="Virtual IBANs" class="marketplace_input" id="virtual_ibans"> <label for="virtual_ibans" class="marketplace_input_label">Virtual IBANs</label><br>
+                        <!-- <input type="text" class="form-control page-form-input" name="merchant_count" placeholder="e.g., 500" required> -->
+                        <div id="banking_services_options_error"></div>
+                    </div><br>
                     <div id="service_type_error"></div>
                 </div>
                 <button type="button" class="btn btn-primary next-btn">Next</button>
+                <!-- bootstrap success alert -->
+                <div class="alert alert-success" role="alert" id="success-alert" style="display:none;">
+                    <span>Thank you for submission. It has been sent.</span>
+                </div>
             </div>
+            <!-- Step 10: Services Interest -->
+            <div id="step-10" class="step" style="display: none;">
+                <h4 class="page-form-title"></h4>
 
+
+                <button type="button" class="btn btn-secondary prev-btn">Previous</button>
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
             <!-- Step 2: Portfolio Details -->
-            <div id="step-2" class="step" style="display:none;">
-                <h4 class="page-form-title"> Portfolio Details</h4>
+            <div id="step-2" class="step" style="display: none;">
+                <h4 class="page-form-title">Portfolio Details</h4>
                 <div class="form-group">
                     <label class="page-form-question">How many merchants do you currently have in your portfolio?</label>
                     <input type="text" class="form-control page-form-input" name="merchant_count" placeholder="e.g., 500" required>
@@ -395,7 +431,31 @@ function pbmfc_submit_form()
                 $service_types[] = ucfirst(str_replace('_', ' ', $field['value']));
             }
         }
+
         $service_types_text = implode(' & ', $service_types);
+        $payment_services = [];
+        foreach ($form_data as $field) {
+            if ($field['name'] === 'payment_services_options[]') {
+                $payment_services[] = $field['value'];
+            }
+        }
+        $payment_services_options = '<ul style="padding-left: 0px !important;">';
+        foreach ($payment_services as $servicer) {
+            $payment_services_options .= '<li>' . $servicer . '</li>';
+        }
+        $payment_services_options .= '</ul>';
+
+        $banking_services = [];
+        foreach ($form_data as $field) {
+            if ($field['name'] === 'banking_services_options[]') {
+                $banking_services[] = $field['value'];
+            }
+        }
+        $banking_services_options = '<ul style="padding-left: 0px !important;">';
+        foreach ($banking_services as $servicer) {
+            $banking_services_options .= '<li>' . $servicer . '</li>';
+        }
+        $banking_services_options .= '</ul>';
 
         // Function to format field names
         function format_field_name($field_name)
@@ -429,16 +489,24 @@ function pbmfc_submit_form()
         // Email settings
         // $admin_email = get_option('admin_email');
         $admin_email = "yaseen3327095758@gmail.com";
+        // $admin_email = "getintouch@kycaml.tech";
         $subject = 'Ahrvo Network Marketplace Revenue Report is Ready – Let’s Discuss Next Steps';
 
         // Prepare the email message for both user and admin
         $message = '<p><strong style="font-size:18px;">Hi ' . $first_name . ' ' . $last_name . ',</strong></p>';
         $message .= '<p>Thank you for completing our <strong>Ahrvo Network Marketplace Revenue</strong> questionnaire.';
         $message .= '<h3>Your Marketplace Revenue Report Submission</h3>';
-
         // Include formatted service types
         $message .= '<p><strong>Which services do you offer in your marketplace?</strong></p>';
         $message .= $service_types_text;
+        if (in_array('Payment services', $service_types)) {
+            $message .= '<p><strong>Which Payment Services do you offer in your marketplace?</strong></p>';
+            $message .= $payment_services_options;
+        }
+        if (in_array('Banking services', $service_types)) {
+            $message .= '<p><strong>Which Banking Services do you offer in your marketplace?</strong></p>';
+            $message .= $banking_services_options;
+        }
         $message .= '<p><strong>How many merchants do you currently have in your portfolio?</strong></p>';
         $message .= (!empty($merchant_count) ? $merchant_count : 'N/A');
         $message .= '<p><strong>What is the expected number of payment transactions per month?</strong></p>';
@@ -456,7 +524,7 @@ function pbmfc_submit_form()
         $message .= '<p><strong>What is the expected number of local payment method transactions per month?</strong></p>';
         $message .= (!empty($local_transactions_count) ? $local_transactions_count : 'N/A');
         $message .= '<p><strong>What is the expected number of FX transactions per month?</strong></p>';
-        $message .= (!empty($fx_transactions_count) ? $fx_transactions_count : 'N/A') ;
+        $message .= (!empty($fx_transactions_count) ? $fx_transactions_count : 'N/A');
 
         // User Base Region Distribution
         $region_output = '<h3>Where are your users based?</h3>';
@@ -504,7 +572,6 @@ function pbmfc_submit_form()
         wp_send_json_error(array('message' => 'Form submission failed. No data received.'));
     }
 }
-// Plugin created by Muhammad Arslan | arslanstack@gmail.com
 
 // Register AJAX actions for logged-in and non-logged-in users
 add_action('wp_ajax_pbmfc_submit_form', 'pbmfc_submit_form');

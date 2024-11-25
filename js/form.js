@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+
     function updateProgressBar(step) {
         const totalSteps = 9; // Total number of steps in your form
         const percentage = (step / totalSteps) * 100;
@@ -30,7 +31,6 @@ jQuery(document).ready(function ($) {
         updateProgressBar(currentStep);
 
     }
-
     // Initialize form by showing the first step
     showStep(currentStep);
 
@@ -94,7 +94,6 @@ jQuery(document).ready(function ($) {
                 return;
             }
         }
-
         if (currentStep === 2) {
             if ($('#payment_services').is(':checked')) {
                 currentStep = 3;
@@ -168,6 +167,24 @@ jQuery(document).ready(function ($) {
         });
     }
 
+    function showOnlyRelevantServicesOptions() {
+        // if payment services checked then show payment_services_options else hide it
+        if ($('#payment_services').is(':checked')) {
+            $('#payment_services_options').show();
+        } else {
+            $('#payment_services_options').hide();
+        }
+
+        // if banking services checked then show banking_services_options else hide it
+
+        if ($('#banking_services').is(':checked')) {
+            $('#banking_services_options').show();
+        } else {
+            $('#banking_services_options').hide();
+        }
+
+    }
+
     // Function to move to the previous step
     function movePrev() {
         if (currentStep === 9) {
@@ -227,7 +244,8 @@ jQuery(document).ready(function ($) {
         } else if (currentStep === 3 && $('#payment_services').is(':checked')) {
             currentStep = 2;
             showStep(currentStep);
-        } else {
+        }
+        else {
             // Default behavior: Go back to the previous step
             currentStep--;
             showStep(currentStep);
@@ -255,6 +273,26 @@ jQuery(document).ready(function ($) {
             <span class="perview-value">
             ${serviceTypes.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
             </span>`);
+        // is payment_Service is checked then show checked payment_services_options[] in form of list else dont show them
+        if ($('#payment_services').is(':checked')) {
+            let paymentServices = formData.filter(data => data.name === 'payment_services_options[]').map(data => data.value);
+            reviewSection.append(`
+            <label for="payment_services_options[]" class="perview-label">Which payment services are you interested in?</label><br>
+            <ul class="perview-value listing-items-perview">
+                ${paymentServices.map(service => `<li>${service.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</li>`).join('')}
+            </ul>
+        `);
+        }
+        // is banking_Service is checked then show checked banking_services_options[] in form of list else dont show them
+        if ($('#banking_services').is(':checked')) {
+            let bankingServices = formData.filter(data => data.name === 'banking_services_options[]').map(data => data.value);
+            reviewSection.append(`
+            <label for="banking_services_options[]" class="perview-label">Which banking services are you interested in?</label><br>
+            <ul class="perview-value listing-items-perview">
+                ${bankingServices.map(service => `<li>${service.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</li>`).join('')}
+            </ul>
+        `);
+        }
 
         // Handle Merchant Count
         let merchantCount = formData.find(data => data.name === 'merchant_count').value;
@@ -449,6 +487,28 @@ jQuery(document).ready(function ($) {
                 } else {
                     $('#service_type_error').html('');
                 }
+
+
+                if ($('#payment_services').is(':checked') && $('input[name="payment_services_options[]"]:checked').length === 0) {
+                    $('#payment_services_options_error').html('<div class="error-message">Please select at least one payment service option.</div>');
+                    valid = false;
+                } else {
+                    $('#payment_services_options_error').html('');
+                }
+
+                // if banking_service selected then select atleast one option from banking_services_options
+                if ($('#banking_services').is(':checked') && $('input[name="banking_services_options[]"]:checked').length === 0) {
+                    $('#banking_services_options_error').html('<div class="error-message">Please select at least one banking service option.</div>');
+                    valid = false;
+                } else {
+                    $('#banking_services_options_error').html('');
+                }
+
+                break;
+            case 10:
+                // if payment_service selected then select atleast one option from payment_services_options
+
+
                 break;
             case 2:
                 if ($('input[name="merchant_count"]').val() === "") {
@@ -660,7 +720,6 @@ jQuery(document).ready(function ($) {
             },
             success: function (response) {
                 if (response.success) {
-                    console.log(response.data.message); // Log success message
                     // alert('Form submitted successfully!');
                     // enable submit and previous button
                     $('.submit-btn').html('Submit');

@@ -12,12 +12,18 @@
     color: #333;
     margin-bottom: 5px;
 }
-
+.page-form-question-services-options{
+    padding-bottom: 1rem !important;
+    color: #1a2952 !important;
+}
 .perview-value {
     font-size: 14px;
     font-weight: normal;
     color: #333;
     margin-bottom: 10px;
+}
+.listing-items-perview{
+    padding-left: 0px !important;
 }
 
 .page-form-title {
@@ -155,4 +161,16 @@ textarea:focus {
     height: 2px !important;
     background-color: #218838 !important;
     border-radius: 5px !important;
+}
+.alert-success{
+  padding: 1rem !important;
+  border-radius: 1.125rem !important;
+  border-width: 1px !important;
+  text-align: center !important;
+  margin-top: 12px !important;
+  color: #36bb91 !important;
+  background-color: #fff !important;
+  border-color: #36bb91 !important;
+  font-weight: 600 !important;
+  position: relative !important;
 }
